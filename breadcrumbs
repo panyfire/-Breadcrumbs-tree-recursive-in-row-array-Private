@@ -1,0 +1,25 @@
+public static function getNavChain($breadcrumbs, $path, &$iterator)
+{
+    $result = array();
+    foreach($breadcrumbs as $k => $v) {
+        if ($v['link'] === $path) {
+            $result[$iterator] = [
+                'label' => $v['link'],
+                'name' => $v['name']
+            ];
+            return $result;
+        } else if (is_array($breadcrumbs[$k]['children'])) {
+            if ($ret=self::getNavChain($breadcrumbs[$k]['children'], $path, $iterator)) {
+                $result[$iterator] = [
+                    'label' => $breadcrumbs[$k]['link'],
+                    'name' => $breadcrumbs[$k]['name']
+                ];
+                if(count($ret)) $result = array_merge($result,$ret);
+
+            };
+        }
+        $iterator++;
+    }
+    return $result;
+}
+
